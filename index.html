@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PUBG Icon Converter</title>
+<title>PUBG Observer Builder</title>
 <style>
   :root {
     --bg: #0d1117;
@@ -26,247 +26,160 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 40px 20px;
+    padding: 40px 20px 60px;
   }
-  header {
-    text-align: center;
-    margin-bottom: 36px;
-  }
-  header h1 {
-    font-size: clamp(1.5rem, 4vw, 2.2rem);
-    font-weight: 800;
-    letter-spacing: -0.5px;
-  }
+  header { text-align: center; margin-bottom: 32px; }
+  header h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; letter-spacing: -0.5px; }
   header h1 span { color: var(--accent); }
-  header p {
-    color: var(--text-muted);
-    margin-top: 8px;
-    font-size: 0.95rem;
-  }
+  header p { color: var(--text-muted); margin-top: 8px; font-size: 0.9rem; }
 
   .settings {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 20px 24px;
+    padding: 16px 20px;
     width: 100%;
-    max-width: 640px;
-    margin-bottom: 24px;
+    max-width: 720px;
+    margin-bottom: 20px;
     display: flex;
-    gap: 20px;
+    gap: 16px;
     flex-wrap: wrap;
     align-items: flex-end;
   }
-  .setting-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    flex: 1;
-    min-width: 140px;
+  .setting-group { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 130px; }
+  .setting-group label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+  .setting-group select, .setting-group input[type="number"] {
+    background: var(--surface-2); border: 1px solid var(--border); color: var(--text);
+    border-radius: 8px; padding: 8px 12px; font-size: 0.875rem; font-family: var(--font);
+    outline: none; transition: border-color 0.2s; cursor: pointer;
   }
-  .setting-group label {
-    font-size: 0.78rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
-  }
-  .setting-group select, .setting-group input {
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 0.9rem;
-    font-family: var(--font);
-    cursor: pointer;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .setting-group select:focus, .setting-group input:focus {
-    border-color: var(--accent);
-  }
+  .setting-group select:focus, .setting-group input:focus { border-color: var(--accent); }
 
   .dropzone {
-    width: 100%;
-    max-width: 640px;
+    width: 100%; max-width: 720px;
     border: 2px dashed var(--border);
     border-radius: var(--radius);
     background: var(--surface);
-    padding: 48px 24px;
+    padding: 40px 24px;
     text-align: center;
     cursor: pointer;
     transition: border-color 0.2s, background 0.2s;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
-  .dropzone.drag-over {
-    border-color: var(--accent);
-    background: rgba(195, 245, 60, 0.05);
-  }
-  .dropzone-icon {
-    font-size: 2.5rem;
-    margin-bottom: 12px;
-  }
-  .dropzone h2 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 6px;
-  }
-  .dropzone p {
-    color: var(--text-muted);
-    font-size: 0.875rem;
-  }
+  .dropzone.drag-over { border-color: var(--accent); background: rgba(195,245,60,0.05); }
+  .dropzone-icon { font-size: 2.2rem; margin-bottom: 10px; }
+  .dropzone h2 { font-size: 1.05rem; font-weight: 600; margin-bottom: 5px; }
+  .dropzone p { color: var(--text-muted); font-size: 0.85rem; }
   .dropzone input { display: none; }
   .btn-browse {
-    display: inline-block;
-    margin-top: 16px;
-    padding: 10px 24px;
-    background: var(--accent);
-    color: #0d1117;
-    font-weight: 700;
-    font-size: 0.9rem;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    transition: background 0.2s;
-    font-family: var(--font);
+    display: inline-block; margin-top: 14px; padding: 9px 22px;
+    background: var(--accent); color: #0d1117; font-weight: 700; font-size: 0.875rem;
+    border-radius: 8px; border: none; cursor: pointer; font-family: var(--font); transition: background 0.2s;
   }
   .btn-browse:hover { background: var(--accent-dark); }
 
-  .preview-grid {
-    width: 100%;
-    max-width: 640px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 12px;
-    margin-bottom: 24px;
-  }
-  .preview-card {
+  .teams-list { width: 100%; max-width: 720px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+
+  .team-card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    transition: border-color 0.2s;
+  }
+  .team-card:hover { border-color: rgba(255,255,255,0.2); }
+
+  .team-preview {
+    flex-shrink: 0;
+    width: 80px;
+    height: 60px;
+    border-radius: 6px;
     overflow: hidden;
+    background: #000;
     position: relative;
   }
-  .preview-card canvas {
-    display: block;
-    width: 100%;
-    aspect-ratio: 4/3;
-    background: #000;
-  }
-  .preview-card .card-info {
-    padding: 8px 10px;
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: var(--surface-2);
-  }
-  .preview-card .badge {
-    background: var(--accent);
-    color: #0d1117;
-    font-weight: 700;
-    font-size: 0.7rem;
-    padding: 2px 6px;
-    border-radius: 4px;
-  }
-  .preview-card .remove-btn {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    background: rgba(0,0,0,0.7);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 22px;
-    height: 22px;
-    font-size: 0.75rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font);
-    transition: background 0.2s;
-  }
-  .preview-card .remove-btn:hover { background: #c0392b; }
+  .team-preview canvas { width: 100%; height: 100%; display: block; }
 
-  .actions {
-    width: 100%;
-    max-width: 640px;
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
+  .team-fields { display: flex; flex-direction: column; gap: 7px; flex: 1; min-width: 0; }
+  .team-fields-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .field-group { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 100px; }
+  .field-group label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); }
+  .field-group input[type="text"] {
+    background: var(--surface-2); border: 1px solid var(--border); color: var(--text);
+    border-radius: 6px; padding: 6px 10px; font-size: 0.85rem; font-family: var(--font);
+    outline: none; transition: border-color 0.2s; width: 100%;
   }
+  .field-group input[type="text"]:focus { border-color: var(--accent); }
+
+  .team-meta { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .slot-badge {
+    background: var(--accent); color: #0d1117; font-weight: 800;
+    font-size: 0.75rem; padding: 3px 8px; border-radius: 5px; white-space: nowrap;
+  }
+  .remove-btn {
+    background: rgba(255,255,255,0.06); color: var(--text-muted); border: none;
+    border-radius: 6px; width: 28px; height: 28px; font-size: 0.8rem;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-family: var(--font); transition: background 0.2s, color 0.2s; flex-shrink: 0;
+  }
+  .remove-btn:hover { background: rgba(192,57,43,0.3); color: #e74c3c; }
+
+  .info-bar {
+    width: 100%; max-width: 720px;
+    background: rgba(195,245,60,0.08); border: 1px solid rgba(195,245,60,0.25);
+    border-radius: 8px; padding: 10px 16px; font-size: 0.82rem; color: var(--accent);
+    margin-bottom: 16px; display: none;
+  }
+  .info-bar.show { display: block; }
+
+  .actions { width: 100%; max-width: 720px; display: flex; gap: 10px; flex-wrap: wrap; }
   .btn-primary {
-    flex: 1;
-    padding: 14px 24px;
-    background: var(--accent);
-    color: #0d1117;
-    font-weight: 800;
-    font-size: 1rem;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-family: var(--font);
-    transition: background 0.2s, opacity 0.2s;
-    letter-spacing: -0.2px;
+    flex: 1; padding: 14px 20px; background: var(--accent); color: #0d1117;
+    font-weight: 800; font-size: 0.95rem; border: none; border-radius: 10px;
+    cursor: pointer; font-family: var(--font); transition: background 0.2s, opacity 0.2s;
   }
   .btn-primary:hover { background: var(--accent-dark); }
   .btn-primary:disabled { opacity: 0.4; cursor: default; }
   .btn-secondary {
-    padding: 14px 20px;
-    background: var(--surface-2);
-    color: var(--text);
-    font-weight: 600;
-    font-size: 0.9rem;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    cursor: pointer;
-    font-family: var(--font);
-    transition: background 0.2s;
+    padding: 14px 18px; background: var(--surface-2); color: var(--text);
+    font-weight: 600; font-size: 0.875rem; border: 1px solid var(--border);
+    border-radius: 10px; cursor: pointer; font-family: var(--font); transition: background 0.2s;
   }
   .btn-secondary:hover { background: var(--surface); }
 
-  .info-bar {
-    width: 100%;
-    max-width: 640px;
-    background: rgba(195,245,60,0.08);
-    border: 1px solid rgba(195,245,60,0.25);
-    border-radius: 8px;
-    padding: 10px 16px;
-    font-size: 0.82rem;
-    color: var(--accent);
-    margin-bottom: 16px;
-    display: none;
-  }
-  .info-bar.show { display: block; }
-
   .specs {
-    width: 100%;
-    max-width: 640px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px 20px;
-    margin-top: 8px;
-    font-size: 0.82rem;
-    color: var(--text-muted);
+    width: 100%; max-width: 720px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 14px 18px; margin-top: 16px; font-size: 0.8rem; color: var(--text-muted);
   }
   .specs strong { color: var(--text); }
-  .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 24px; margin-top: 8px; }
+  .specs-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px 20px; margin-top: 7px; }
+
+  .zip-contents {
+    width: 100%; max-width: 720px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 14px 18px; margin-top: 10px; font-size: 0.8rem; color: var(--text-muted);
+  }
+  .zip-contents strong { color: var(--text); display: block; margin-bottom: 6px; }
+  .zip-contents ul { list-style: none; display: flex; flex-direction: column; gap: 3px; padding-left: 8px; }
+  .zip-contents li::before { content: "📄 "; }
+  .zip-contents li.folder::before { content: "📁 "; }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>PUBG <span>Icon Converter</span></h1>
-  <p>Convertis tes logos en icônes killfeed prêtes à l'emploi</p>
+  <h1>PUBG <span>Observer Builder</span></h1>
+  <p>Upload tes logos, saisis les noms d'équipes → ZIP prêt à coller dans PUBG</p>
 </header>
 
 <div class="settings">
   <div class="setting-group">
-    <label>Résolution de sortie</label>
+    <label>Résolution</label>
     <select id="resolution">
       <option value="512x384">512×384 px (recommandé)</option>
       <option value="256x192">256×192 px (léger)</option>
@@ -274,90 +187,85 @@
     </select>
   </div>
   <div class="setting-group">
-    <label>Fond</label>
+    <label>Fond des icônes</label>
     <select id="background">
       <option value="transparent">Transparent</option>
       <option value="black">Noir</option>
       <option value="white">Blanc</option>
-      <option value="custom">Personnalisé</option>
     </select>
   </div>
-  <div class="setting-group" id="customColorGroup" style="display:none">
-    <label>Couleur de fond</label>
-    <input type="color" id="customColor" value="#1a1a2e">
-  </div>
   <div class="setting-group">
-    <label>Numérotation départ</label>
-    <input type="number" id="startNum" value="1" min="1" max="999" style="width:80px">
+    <label>N° de départ</label>
+    <input type="number" id="startNum" value="1" min="1" max="999">
   </div>
 </div>
 
 <div class="dropzone" id="dropzone">
   <div class="dropzone-icon">🖼️</div>
   <h2>Glisse tes logos ici</h2>
-  <p>PNG, JPG, WEBP, SVG acceptés</p>
+  <p>PNG, JPG, WEBP acceptés — plusieurs fichiers à la fois</p>
   <button class="btn-browse" onclick="document.getElementById('fileInput').click()">Parcourir les fichiers</button>
   <input type="file" id="fileInput" multiple accept="image/*">
 </div>
 
 <div id="infoBar" class="info-bar"></div>
-
-<div class="preview-grid" id="previewGrid"></div>
+<div class="teams-list" id="teamsList"></div>
 
 <div class="actions">
-  <button class="btn-primary" id="downloadBtn" disabled onclick="downloadAll()">⬇ Télécharger tout (ZIP)</button>
+  <button class="btn-primary" id="downloadBtn" disabled onclick="downloadAll()">⬇ Générer le dossier Observer (ZIP)</button>
   <button class="btn-secondary" onclick="clearAll()">🗑 Tout effacer</button>
 </div>
 
+<div class="zip-contents">
+  <strong>Contenu du ZIP généré</strong>
+  <ul>
+    <li class="folder">Observer/</li>
+    <li class="folder">&nbsp;&nbsp;TeamIcon/ → tous tes logos (001.png, 002.png…)</li>
+    <li>&nbsp;&nbsp;Teaminfo.csv → noms d'équipes pour l'overlay</li>
+  </ul>
+</div>
+
 <div class="specs">
-  <strong>Specs PUBG killfeed</strong>
+  <strong>Rappel specs PUBG</strong>
   <div class="specs-grid">
     <span>Ratio : <strong>4:3</strong></span>
     <span>Format : <strong>PNG</strong></span>
-    <span>Nommage : <strong>001.png, 002.png…</strong></span>
-    <span>Dossier : <strong>TeamIcon/</strong></span>
+    <span>Dossier cible : <strong>%LOCALAPPDATA%\TslGame\Saved\Observer\</strong></span>
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
-  let images = [];
+  let teams = [];
 
   const dropzone = document.getElementById('dropzone');
   const fileInput = document.getElementById('fileInput');
-  const previewGrid = document.getElementById('previewGrid');
+  const teamsList = document.getElementById('teamsList');
   const downloadBtn = document.getElementById('downloadBtn');
   const infoBar = document.getElementById('infoBar');
-  const bgSelect = document.getElementById('background');
-  const customColorGroup = document.getElementById('customColorGroup');
-
-  bgSelect.addEventListener('change', () => {
-    customColorGroup.style.display = bgSelect.value === 'custom' ? 'flex' : 'none';
-    rerenderAll();
-  });
-  document.getElementById('customColor').addEventListener('input', rerenderAll);
-  document.getElementById('resolution').addEventListener('change', rerenderAll);
 
   dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('drag-over'); });
   dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag-over'));
-  dropzone.addEventListener('drop', e => {
-    e.preventDefault();
-    dropzone.classList.remove('drag-over');
-    handleFiles(Array.from(e.dataTransfer.files));
-  });
+  dropzone.addEventListener('drop', e => { e.preventDefault(); dropzone.classList.remove('drag-over'); handleFiles(Array.from(e.dataTransfer.files)); });
   fileInput.addEventListener('change', () => handleFiles(Array.from(fileInput.files)));
+  document.getElementById('resolution').addEventListener('change', rerenderPreviews);
+  document.getElementById('background').addEventListener('change', rerenderPreviews);
+  document.getElementById('startNum').addEventListener('input', rerenderSlots);
 
   function handleFiles(files) {
     const valid = files.filter(f => f.type.startsWith('image/'));
     if (!valid.length) return;
+    let loaded = 0;
     valid.forEach(file => {
       const reader = new FileReader();
       reader.onload = e => {
         const img = new Image();
         img.onload = () => {
-          images.push({ img, name: file.name });
-          renderCard(images.length - 1);
-          updateUI();
+          // Auto-generate team name from filename (strip extension)
+          const autoName = file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ').replace(/\w/g, c => c.toUpperCase());
+          teams.push({ img, fileName: file.name, teamName: autoName });
+          loaded++;
+          if (loaded === valid.length) renderAll();
         };
         img.src = e.target.result;
       };
@@ -367,111 +275,133 @@
 
   function getSettings() {
     const res = document.getElementById('resolution').value.split('x');
-    const w = parseInt(res[0]), h = parseInt(res[1]);
-    const bg = bgSelect.value;
-    const color = document.getElementById('customColor').value;
-    return { w, h, bg, color };
+    return { w: parseInt(res[0]), h: parseInt(res[1]), bg: document.getElementById('background').value };
   }
 
-  function renderToCanvas(img, canvas, settings) {
-    const { w, h, bg, color } = settings;
-    canvas.width = w;
-    canvas.height = h;
+  function drawToCanvas(img, canvas, settings) {
+    const { w, h, bg } = settings;
+    canvas.width = w; canvas.height = h;
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, w, h);
-
     if (bg === 'transparent') {
-      // checkerboard preview
-      const tileSize = 12;
-      for (let y = 0; y < h; y += tileSize) {
-        for (let x = 0; x < w; x += tileSize) {
-          ctx.fillStyle = ((x + y) / tileSize) % 2 === 0 ? '#ccc' : '#fff';
-          ctx.fillRect(x, y, tileSize, tileSize);
-        }
+      const t = 10;
+      for (let y = 0; y < h; y += t) for (let x = 0; x < w; x += t) {
+        ctx.fillStyle = ((x + y) / t) % 2 === 0 ? '#444' : '#333';
+        ctx.fillRect(x, y, t, t);
       }
-    } else {
-      ctx.fillStyle = bg === 'custom' ? color : bg;
-      ctx.fillRect(0, 0, w, h);
-    }
-
-    // Draw image with cover fill (crop to 4:3)
-    const targetRatio = w / h;
-    const imgRatio = img.naturalWidth / img.naturalHeight;
+    } else { ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h); }
+    const targetRatio = w / h, imgRatio = img.naturalWidth / img.naturalHeight;
     let sx, sy, sw, sh;
-    if (imgRatio > targetRatio) {
-      sh = img.naturalHeight;
-      sw = sh * targetRatio;
-      sx = (img.naturalWidth - sw) / 2;
-      sy = 0;
-    } else {
-      sw = img.naturalWidth;
-      sh = sw / targetRatio;
-      sx = 0;
-      sy = (img.naturalHeight - sh) / 2;
-    }
+    if (imgRatio > targetRatio) { sh = img.naturalHeight; sw = sh * targetRatio; sx = (img.naturalWidth - sw) / 2; sy = 0; }
+    else { sw = img.naturalWidth; sh = sw / targetRatio; sx = 0; sy = (img.naturalHeight - sh) / 2; }
     ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
   }
 
-  function renderCard(index) {
-    const { img, name } = images[index];
+  function getSlotNum(index) {
+    const start = parseInt(document.getElementById('startNum').value) || 1;
+    return String(start + index).padStart(3, '0');
+  }
+
+  function renderAll() {
+    teamsList.innerHTML = '';
+    teams.forEach((team, i) => addCard(team, i));
+    updateUI();
+  }
+
+  function addCard(team, index) {
     const settings = getSettings();
-    const startNum = parseInt(document.getElementById('startNum').value) || 1;
-    const fileNum = String(startNum + index).padStart(3, '0');
+    const slotNum = getSlotNum(index);
 
     const card = document.createElement('div');
-    card.className = 'preview-card';
+    card.className = 'team-card';
     card.dataset.index = index;
 
+    // Preview
+    const previewWrap = document.createElement('div');
+    previewWrap.className = 'team-preview';
     const canvas = document.createElement('canvas');
-    renderToCanvas(img, canvas, settings);
+    drawToCanvas(team.img, canvas, settings);
+    previewWrap.appendChild(canvas);
 
-    const info = document.createElement('div');
-    info.className = 'card-info';
-    info.innerHTML = `<span class="badge">${fileNum}.png</span><span style="font-size:0.72rem;max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${name}</span>`;
+    // Fields
+    const fields = document.createElement('div');
+    fields.className = 'team-fields';
+
+    const row = document.createElement('div');
+    row.className = 'team-fields-row';
+
+    // Team name field
+    const nameGroup = document.createElement('div');
+    nameGroup.className = 'field-group';
+    nameGroup.style.flex = '2';
+    nameGroup.innerHTML = '<label>Nom de l'équipe</label>';
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.placeholder = 'ex: Team Liquid';
+    nameInput.value = team.teamName || '';
+    nameInput.addEventListener('input', e => { teams[index].teamName = e.target.value; });
+    nameGroup.appendChild(nameInput);
+
+    // Tag field
+    const tagGroup = document.createElement('div');
+    tagGroup.className = 'field-group';
+    tagGroup.innerHTML = '<label>Tag (3-4 lettres)</label>';
+    const tagInput = document.createElement('input');
+    tagInput.type = 'text';
+    tagInput.placeholder = 'ex: TL';
+    tagInput.maxLength = 6;
+    tagInput.value = team.teamTag || '';
+    tagInput.addEventListener('input', e => { teams[index].teamTag = e.target.value; });
+    tagGroup.appendChild(tagInput);
+
+    row.appendChild(nameGroup);
+    row.appendChild(tagGroup);
+    fields.appendChild(row);
+
+    // Meta (slot + remove)
+    const meta = document.createElement('div');
+    meta.className = 'team-meta';
+
+    const badge = document.createElement('span');
+    badge.className = 'slot-badge';
+    badge.textContent = slotNum + '.png';
 
     const removeBtn = document.createElement('button');
     removeBtn.className = 'remove-btn';
     removeBtn.innerHTML = '✕';
-    removeBtn.onclick = () => removeImage(index);
+    removeBtn.title = 'Retirer';
+    removeBtn.onclick = () => { teams.splice(index, 1); renderAll(); };
 
-    card.appendChild(canvas);
-    card.appendChild(info);
-    card.appendChild(removeBtn);
-    previewGrid.appendChild(card);
+    meta.appendChild(badge);
+    meta.appendChild(removeBtn);
+
+    card.appendChild(previewWrap);
+    card.appendChild(fields);
+    card.appendChild(meta);
+    teamsList.appendChild(card);
   }
 
-  function rerenderAll() {
-    const cards = previewGrid.querySelectorAll('.preview-card');
-    const startNum = parseInt(document.getElementById('startNum').value) || 1;
-    cards.forEach((card, i) => {
-      const index = parseInt(card.dataset.index);
+  function rerenderPreviews() {
+    const settings = getSettings();
+    teamsList.querySelectorAll('.team-card').forEach((card, i) => {
       const canvas = card.querySelector('canvas');
-      const badge = card.querySelector('.badge');
-      const fileNum = String(startNum + i).padStart(3, '0');
-      badge.textContent = `${fileNum}.png`;
-      renderToCanvas(images[index].img, canvas, getSettings());
+      drawToCanvas(teams[parseInt(card.dataset.index)].img, canvas, settings);
     });
   }
 
-  document.getElementById('startNum').addEventListener('input', rerenderAll);
-
-  function removeImage(index) {
-    images.splice(index, 1);
-    previewGrid.innerHTML = '';
-    images.forEach((_, i) => renderCard(i));
-    updateUI();
+  function rerenderSlots() {
+    teamsList.querySelectorAll('.team-card').forEach((card, i) => {
+      const badge = card.querySelector('.slot-badge');
+      badge.textContent = getSlotNum(i) + '.png';
+    });
   }
 
-  function clearAll() {
-    images = [];
-    previewGrid.innerHTML = '';
-    updateUI();
-  }
+  function clearAll() { teams = []; teamsList.innerHTML = ''; updateUI(); }
 
   function updateUI() {
-    downloadBtn.disabled = images.length === 0;
-    if (images.length > 0) {
-      infoBar.textContent = `✅ ${images.length} image${images.length > 1 ? 's' : ''} prête${images.length > 1 ? 's' : ''} — cliquez sur Télécharger pour obtenir le ZIP`;
+    downloadBtn.disabled = teams.length === 0;
+    if (teams.length > 0) {
+      infoBar.textContent = `✅ ${teams.length} équipe${teams.length > 1 ? 's' : ''} configurée${teams.length > 1 ? 's' : ''} — remplis les noms puis génère le ZIP`;
       infoBar.classList.add('show');
     } else {
       infoBar.classList.remove('show');
@@ -480,49 +410,47 @@
 
   async function downloadAll() {
     const zip = new JSZip();
-    const folder = zip.folder('TeamIcon');
+    const observer = zip.folder('Observer');
+    const teamIcon = observer.folder('TeamIcon');
     const settings = getSettings();
-    const startNum = parseInt(document.getElementById('startNum').value) || 1;
+    const start = parseInt(document.getElementById('startNum').value) || 1;
 
-    for (let i = 0; i < images.length; i++) {
-      const { img } = images[i];
-      const fileNum = String(startNum + i).padStart(3, '0');
+    // CSV header
+    let csv = 'Number,Name,Tags,FileName,TeamColor
+';
+
+    for (let i = 0; i < teams.length; i++) {
+      const { img, teamName, teamTag } = teams[i];
+      const slotNum = String(start + i).padStart(3, '0');
+      const fileName = slotNum + '.png';
+
+      // Draw PNG (real bg, no checkerboard)
       const offscreen = document.createElement('canvas');
-
-      // For download: use transparent bg properly (no checkerboard)
-      offscreen.width = settings.w;
-      offscreen.height = settings.h;
+      offscreen.width = settings.w; offscreen.height = settings.h;
       const ctx = offscreen.getContext('2d');
-
-      if (settings.bg !== 'transparent') {
-        ctx.fillStyle = settings.bg === 'custom' ? settings.color : settings.bg;
-        ctx.fillRect(0, 0, settings.w, settings.h);
-      }
-
-      const targetRatio = settings.w / settings.h;
-      const imgRatio = img.naturalWidth / img.naturalHeight;
+      if (settings.bg !== 'transparent') { ctx.fillStyle = settings.bg; ctx.fillRect(0, 0, settings.w, settings.h); }
+      const targetRatio = settings.w / settings.h, imgRatio = img.naturalWidth / img.naturalHeight;
       let sx, sy, sw, sh;
-      if (imgRatio > targetRatio) {
-        sh = img.naturalHeight;
-        sw = sh * targetRatio;
-        sx = (img.naturalWidth - sw) / 2;
-        sy = 0;
-      } else {
-        sw = img.naturalWidth;
-        sh = sw / targetRatio;
-        sx = 0;
-        sy = (img.naturalHeight - sh) / 2;
-      }
+      if (imgRatio > targetRatio) { sh = img.naturalHeight; sw = sh * targetRatio; sx = (img.naturalWidth - sw) / 2; sy = 0; }
+      else { sw = img.naturalWidth; sh = sw / targetRatio; sx = 0; sy = (img.naturalHeight - sh) / 2; }
       ctx.drawImage(img, sx, sy, sw, sh, 0, 0, settings.w, settings.h);
 
       const blob = await new Promise(res => offscreen.toBlob(res, 'image/png'));
-      folder.file(`${fileNum}.png`, blob);
+      teamIcon.file(fileName, blob);
+
+      // CSV row
+      const name = (teamName || ('Team ' + (start + i))).replace(/,/g, ' ');
+      const tag = (teamTag || slotNum).replace(/,/g, '');
+      csv += `${start + i},${name},${tag},${fileName},FFFFFFFF
+`;
     }
+
+    observer.file('Teaminfo.csv', csv);
 
     const zipBlob = await zip.generateAsync({ type: 'blob' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(zipBlob);
-    a.download = 'TeamIcon_PUBG.zip';
+    a.download = 'Observer_PUBG.zip';
     a.click();
   }
 </script>
