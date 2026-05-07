@@ -38,13 +38,9 @@
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 16px 20px;
-    width: 100%;
-    max-width: 720px;
+    width: 100%; max-width: 720px;
     margin-bottom: 20px;
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    align-items: flex-end;
+    display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end;
   }
   .setting-group { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 130px; }
   .setting-group label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
@@ -55,8 +51,10 @@
   }
   .setting-group select:focus, .setting-group input:focus { border-color: var(--accent); }
 
-  .dropzone {
+  /* Dropzone = label wrapping the input for native click support */
+  .dropzone-label {
     width: 100%; max-width: 720px;
+    display: block;
     border: 2px dashed var(--border);
     border-radius: var(--radius);
     background: var(--surface);
@@ -66,46 +64,35 @@
     transition: border-color 0.2s, background 0.2s;
     margin-bottom: 20px;
   }
-  .dropzone.drag-over { border-color: var(--accent); background: rgba(195,245,60,0.05); }
+  .dropzone-label.drag-over { border-color: var(--accent); background: rgba(195,245,60,0.05); }
   .dropzone-icon { font-size: 2.2rem; margin-bottom: 10px; }
-  .dropzone h2 { font-size: 1.05rem; font-weight: 600; margin-bottom: 5px; }
-  .dropzone p { color: var(--text-muted); font-size: 0.85rem; }
-  .dropzone input { display: none; }
+  .dropzone-label h2 { font-size: 1.05rem; font-weight: 600; margin-bottom: 5px; pointer-events: none; }
+  .dropzone-label p { color: var(--text-muted); font-size: 0.85rem; pointer-events: none; }
+  .dropzone-label input[type="file"] { display: none; }
   .btn-browse {
     display: inline-block; margin-top: 14px; padding: 9px 22px;
     background: var(--accent); color: #0d1117; font-weight: 700; font-size: 0.875rem;
-    border-radius: 8px; border: none; cursor: pointer; font-family: var(--font); transition: background 0.2s;
+    border-radius: 8px; pointer-events: none;
+    font-family: var(--font);
   }
-  .btn-browse:hover { background: var(--accent-dark); }
 
   .teams-list { width: 100%; max-width: 720px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
 
   .team-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 12px 14px;
-    transition: border-color 0.2s;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; display: flex; align-items: center;
+    gap: 14px; padding: 12px 14px; transition: border-color 0.2s;
   }
   .team-card:hover { border-color: rgba(255,255,255,0.2); }
 
   .team-preview {
-    flex-shrink: 0;
-    width: 80px;
-    height: 60px;
-    border-radius: 6px;
-    overflow: hidden;
-    background: #000;
-    position: relative;
+    flex-shrink: 0; width: 80px; height: 60px;
+    border-radius: 6px; overflow: hidden; background: #000;
   }
   .team-preview canvas { width: 100%; height: 100%; display: block; }
 
   .team-fields { display: flex; flex-direction: column; gap: 7px; flex: 1; min-width: 0; }
   .team-fields-row { display: flex; gap: 8px; flex-wrap: wrap; }
-
   .field-group { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 100px; }
   .field-group label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); }
   .field-group input[type="text"] {
@@ -151,14 +138,6 @@
   }
   .btn-secondary:hover { background: var(--surface); }
 
-  .specs {
-    width: 100%; max-width: 720px; background: var(--surface);
-    border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 14px 18px; margin-top: 16px; font-size: 0.8rem; color: var(--text-muted);
-  }
-  .specs strong { color: var(--text); }
-  .specs-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px 20px; margin-top: 7px; }
-
   .zip-contents {
     width: 100%; max-width: 720px; background: var(--surface);
     border: 1px solid var(--border); border-radius: var(--radius);
@@ -166,8 +145,16 @@
   }
   .zip-contents strong { color: var(--text); display: block; margin-bottom: 6px; }
   .zip-contents ul { list-style: none; display: flex; flex-direction: column; gap: 3px; padding-left: 8px; }
-  .zip-contents li::before { content: "📄 "; }
   .zip-contents li.folder::before { content: "📁 "; }
+  .zip-contents li::before { content: "📄 "; }
+
+  .specs {
+    width: 100%; max-width: 720px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 14px 18px; margin-top: 10px; font-size: 0.8rem; color: var(--text-muted);
+  }
+  .specs strong { color: var(--text); }
+  .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 20px; margin-top: 7px; }
 </style>
 </head>
 <body>
@@ -181,9 +168,9 @@
   <div class="setting-group">
     <label>Résolution</label>
     <select id="resolution">
-      <option value="512x384">512×384 px (recommandé)</option>
-      <option value="256x192">256×192 px (léger)</option>
-      <option value="1024x768">1024×768 px (HD)</option>
+      <option value="512x384">512x384 px (recommandé)</option>
+      <option value="256x192">256x192 px (léger)</option>
+      <option value="1024x768">1024x768 px (HD)</option>
     </select>
   </div>
   <div class="setting-group">
@@ -200,70 +187,86 @@
   </div>
 </div>
 
-<div class="dropzone" id="dropzone">
+<label class="dropzone-label" id="dropzone">
   <div class="dropzone-icon">🖼️</div>
   <h2>Glisse tes logos ici</h2>
   <p>PNG, JPG, WEBP acceptés — plusieurs fichiers à la fois</p>
-  <button class="btn-browse" onclick="document.getElementById('fileInput').click()">Parcourir les fichiers</button>
+  <span class="btn-browse">Parcourir les fichiers</span>
   <input type="file" id="fileInput" multiple accept="image/*">
-</div>
+</label>
 
 <div id="infoBar" class="info-bar"></div>
 <div class="teams-list" id="teamsList"></div>
 
 <div class="actions">
-  <button class="btn-primary" id="downloadBtn" disabled onclick="downloadAll()">⬇ Générer le dossier Observer (ZIP)</button>
-  <button class="btn-secondary" onclick="clearAll()">🗑 Tout effacer</button>
+  <button class="btn-primary" id="downloadBtn" disabled>⬇ Générer le dossier Observer (ZIP)</button>
+  <button class="btn-secondary" id="clearBtn">🗑 Tout effacer</button>
 </div>
 
 <div class="zip-contents">
   <strong>Contenu du ZIP généré</strong>
   <ul>
     <li class="folder">Observer/</li>
-    <li class="folder">&nbsp;&nbsp;TeamIcon/ → tous tes logos (001.png, 002.png…)</li>
-    <li>&nbsp;&nbsp;Teaminfo.csv → noms d'équipes pour l'overlay</li>
+    <li class="folder">&nbsp;&nbsp;TeamIcon/ → tes logos (001.png, 002.png…)</li>
+    <li>&nbsp;&nbsp;Teaminfo.csv → noms + tags pour l'overlay</li>
   </ul>
 </div>
 
 <div class="specs">
-  <strong>Rappel specs PUBG</strong>
+  <strong>Rappel — où coller le dossier</strong>
   <div class="specs-grid">
-    <span>Ratio : <strong>4:3</strong></span>
-    <span>Format : <strong>PNG</strong></span>
-    <span>Dossier cible : <strong>%LOCALAPPDATA%\TslGame\Saved\Observer\</strong></span>
+    <span>Chemin : <strong>%LOCALAPPDATA%\TslGame\Saved\</strong></span>
+    <span>Format : <strong>PNG 4:3</strong></span>
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
-  let teams = [];
+(function() {
+  var teams = [];
+  var dropzone = document.getElementById('dropzone');
+  var fileInput = document.getElementById('fileInput');
+  var teamsList = document.getElementById('teamsList');
+  var downloadBtn = document.getElementById('downloadBtn');
+  var clearBtn = document.getElementById('clearBtn');
+  var infoBar = document.getElementById('infoBar');
 
-  const dropzone = document.getElementById('dropzone');
-  const fileInput = document.getElementById('fileInput');
-  const teamsList = document.getElementById('teamsList');
-  const downloadBtn = document.getElementById('downloadBtn');
-  const infoBar = document.getElementById('infoBar');
+  // Drag events on the label
+  dropzone.addEventListener('dragover', function(e) { e.preventDefault(); dropzone.classList.add('drag-over'); });
+  dropzone.addEventListener('dragleave', function() { dropzone.classList.remove('drag-over'); });
+  dropzone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    dropzone.classList.remove('drag-over');
+    handleFiles(Array.from(e.dataTransfer.files));
+  });
 
-  dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('drag-over'); });
-  dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag-over'));
-  dropzone.addEventListener('drop', e => { e.preventDefault(); dropzone.classList.remove('drag-over'); handleFiles(Array.from(e.dataTransfer.files)); });
-  fileInput.addEventListener('change', () => handleFiles(Array.from(fileInput.files)));
+  // File input change
+  fileInput.addEventListener('change', function() {
+    if (fileInput.files && fileInput.files.length > 0) {
+      handleFiles(Array.from(fileInput.files));
+      fileInput.value = '';
+    }
+  });
+
   document.getElementById('resolution').addEventListener('change', rerenderPreviews);
   document.getElementById('background').addEventListener('change', rerenderPreviews);
   document.getElementById('startNum').addEventListener('input', rerenderSlots);
 
+  downloadBtn.addEventListener('click', downloadAll);
+  clearBtn.addEventListener('click', clearAll);
+
   function handleFiles(files) {
-    const valid = files.filter(f => f.type.startsWith('image/'));
+    var valid = files.filter(function(f) { return f.type.startsWith('image/'); });
     if (!valid.length) return;
-    let loaded = 0;
-    valid.forEach(file => {
-      const reader = new FileReader();
-      reader.onload = e => {
-        const img = new Image();
-        img.onload = () => {
-          // Auto-generate team name from filename (strip extension)
-          const autoName = file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ').replace(/\w/g, c => c.toUpperCase());
-          teams.push({ img, fileName: file.name, teamName: autoName });
+    var loaded = 0;
+    valid.forEach(function(file) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var img = new Image();
+        img.onload = function() {
+          var autoName = file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
+          autoName = autoName.replace(/\w/g, function(c) { return c.toUpperCase(); });
+          teams.push({ img: img, fileName: file.name, teamName: autoName, teamTag: '' });
           loaded++;
           if (loaded === valid.length) renderAll();
         };
@@ -274,103 +277,120 @@
   }
 
   function getSettings() {
-    const res = document.getElementById('resolution').value.split('x');
+    var res = document.getElementById('resolution').value.split('x');
     return { w: parseInt(res[0]), h: parseInt(res[1]), bg: document.getElementById('background').value };
   }
 
   function drawToCanvas(img, canvas, settings) {
-    const { w, h, bg } = settings;
+    var w = settings.w, h = settings.h, bg = settings.bg;
     canvas.width = w; canvas.height = h;
-    const ctx = canvas.getContext('2d');
+    var ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, w, h);
     if (bg === 'transparent') {
-      const t = 10;
-      for (let y = 0; y < h; y += t) for (let x = 0; x < w; x += t) {
-        ctx.fillStyle = ((x + y) / t) % 2 === 0 ? '#444' : '#333';
-        ctx.fillRect(x, y, t, t);
+      var t = 10;
+      for (var y = 0; y < h; y += t) {
+        for (var x = 0; x < w; x += t) {
+          ctx.fillStyle = (Math.floor(x/t) + Math.floor(y/t)) % 2 === 0 ? '#555' : '#333';
+          ctx.fillRect(x, y, t, t);
+        }
       }
-    } else { ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h); }
-    const targetRatio = w / h, imgRatio = img.naturalWidth / img.naturalHeight;
-    let sx, sy, sw, sh;
-    if (imgRatio > targetRatio) { sh = img.naturalHeight; sw = sh * targetRatio; sx = (img.naturalWidth - sw) / 2; sy = 0; }
-    else { sw = img.naturalWidth; sh = sw / targetRatio; sx = 0; sy = (img.naturalHeight - sh) / 2; }
+    } else {
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+    }
+    var targetRatio = w / h, imgRatio = img.naturalWidth / img.naturalHeight;
+    var sx, sy, sw, sh;
+    if (imgRatio > targetRatio) {
+      sh = img.naturalHeight; sw = sh * targetRatio;
+      sx = (img.naturalWidth - sw) / 2; sy = 0;
+    } else {
+      sw = img.naturalWidth; sh = sw / targetRatio;
+      sx = 0; sy = (img.naturalHeight - sh) / 2;
+    }
     ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
   }
 
   function getSlotNum(index) {
-    const start = parseInt(document.getElementById('startNum').value) || 1;
+    var start = parseInt(document.getElementById('startNum').value) || 1;
     return String(start + index).padStart(3, '0');
   }
 
   function renderAll() {
     teamsList.innerHTML = '';
-    teams.forEach((team, i) => addCard(team, i));
+    teams.forEach(function(team, i) { addCard(team, i); });
     updateUI();
   }
 
   function addCard(team, index) {
-    const settings = getSettings();
-    const slotNum = getSlotNum(index);
+    var settings = getSettings();
+    var slotNum = getSlotNum(index);
 
-    const card = document.createElement('div');
+    var card = document.createElement('div');
     card.className = 'team-card';
     card.dataset.index = index;
 
-    // Preview
-    const previewWrap = document.createElement('div');
+    var previewWrap = document.createElement('div');
     previewWrap.className = 'team-preview';
-    const canvas = document.createElement('canvas');
+    var canvas = document.createElement('canvas');
     drawToCanvas(team.img, canvas, settings);
     previewWrap.appendChild(canvas);
 
-    // Fields
-    const fields = document.createElement('div');
+    var fields = document.createElement('div');
     fields.className = 'team-fields';
-
-    const row = document.createElement('div');
+    var row = document.createElement('div');
     row.className = 'team-fields-row';
 
-    // Team name field
-    const nameGroup = document.createElement('div');
+    var nameGroup = document.createElement('div');
     nameGroup.className = 'field-group';
     nameGroup.style.flex = '2';
-    nameGroup.innerHTML = '<label>Nom de l'équipe</label>';
-    const nameInput = document.createElement('input');
+    var nameLabel = document.createElement('label');
+    nameLabel.textContent = "Nom de l'équipe";
+    var nameInput = document.createElement('input');
     nameInput.type = 'text';
     nameInput.placeholder = 'ex: Team Liquid';
     nameInput.value = team.teamName || '';
-    nameInput.addEventListener('input', e => { teams[index].teamName = e.target.value; });
+    (function(idx) {
+      nameInput.addEventListener('input', function(e) { teams[idx].teamName = e.target.value; });
+    })(index);
+    nameGroup.appendChild(nameLabel);
     nameGroup.appendChild(nameInput);
 
-    // Tag field
-    const tagGroup = document.createElement('div');
+    var tagGroup = document.createElement('div');
     tagGroup.className = 'field-group';
-    tagGroup.innerHTML = '<label>Tag (3-4 lettres)</label>';
-    const tagInput = document.createElement('input');
+    var tagLabel = document.createElement('label');
+    tagLabel.textContent = 'Tag (2-4 lettres)';
+    var tagInput = document.createElement('input');
     tagInput.type = 'text';
     tagInput.placeholder = 'ex: TL';
     tagInput.maxLength = 6;
     tagInput.value = team.teamTag || '';
-    tagInput.addEventListener('input', e => { teams[index].teamTag = e.target.value; });
+    (function(idx) {
+      tagInput.addEventListener('input', function(e) { teams[idx].teamTag = e.target.value; });
+    })(index);
+    tagGroup.appendChild(tagLabel);
     tagGroup.appendChild(tagInput);
 
     row.appendChild(nameGroup);
     row.appendChild(tagGroup);
     fields.appendChild(row);
 
-    // Meta (slot + remove)
-    const meta = document.createElement('div');
+    var meta = document.createElement('div');
     meta.className = 'team-meta';
 
-    const badge = document.createElement('span');
+    var badge = document.createElement('span');
     badge.className = 'slot-badge';
     badge.textContent = slotNum + '.png';
 
-    const removeBtn = document.createElement('button');
+    var removeBtn = document.createElement('button');
     removeBtn.className = 'remove-btn';
-    removeBtn.innerHTML = '✕';
+    removeBtn.innerHTML = '&#x2715;';
     removeBtn.title = 'Retirer';
-    removeBtn.onclick = () => { teams.splice(index, 1); renderAll(); };
+    (function(idx) {
+      removeBtn.addEventListener('click', function() {
+        teams.splice(idx, 1);
+        renderAll();
+      });
+    })(index);
 
     meta.appendChild(badge);
     meta.appendChild(removeBtn);
@@ -382,26 +402,33 @@
   }
 
   function rerenderPreviews() {
-    const settings = getSettings();
-    teamsList.querySelectorAll('.team-card').forEach((card, i) => {
-      const canvas = card.querySelector('canvas');
-      drawToCanvas(teams[parseInt(card.dataset.index)].img, canvas, settings);
+    var settings = getSettings();
+    var cards = teamsList.querySelectorAll('.team-card');
+    cards.forEach(function(card) {
+      var idx = parseInt(card.dataset.index);
+      var canvas = card.querySelector('canvas');
+      drawToCanvas(teams[idx].img, canvas, settings);
     });
   }
 
   function rerenderSlots() {
-    teamsList.querySelectorAll('.team-card').forEach((card, i) => {
-      const badge = card.querySelector('.slot-badge');
+    var cards = teamsList.querySelectorAll('.team-card');
+    cards.forEach(function(card, i) {
+      var badge = card.querySelector('.slot-badge');
       badge.textContent = getSlotNum(i) + '.png';
     });
   }
 
-  function clearAll() { teams = []; teamsList.innerHTML = ''; updateUI(); }
+  function clearAll() {
+    teams = [];
+    teamsList.innerHTML = '';
+    updateUI();
+  }
 
   function updateUI() {
     downloadBtn.disabled = teams.length === 0;
     if (teams.length > 0) {
-      infoBar.textContent = `✅ ${teams.length} équipe${teams.length > 1 ? 's' : ''} configurée${teams.length > 1 ? 's' : ''} — remplis les noms puis génère le ZIP`;
+      infoBar.textContent = teams.length + ' equipe' + (teams.length > 1 ? 's' : '') + ' configuree' + (teams.length > 1 ? 's' : '') + ' - remplis les noms puis clique sur Generer';
       infoBar.classList.add('show');
     } else {
       infoBar.classList.remove('show');
@@ -409,50 +436,57 @@
   }
 
   async function downloadAll() {
-    const zip = new JSZip();
-    const observer = zip.folder('Observer');
-    const teamIcon = observer.folder('TeamIcon');
-    const settings = getSettings();
-    const start = parseInt(document.getElementById('startNum').value) || 1;
-
-    // CSV header
-    let csv = 'Number,Name,Tags,FileName,TeamColor
+    var zip = new JSZip();
+    var observer = zip.folder('Observer');
+    var teamIcon = observer.folder('TeamIcon');
+    var settings = getSettings();
+    var start = parseInt(document.getElementById('startNum').value) || 1;
+    var csv = 'Number,Name,Tags,FileName,TeamColor
 ';
 
-    for (let i = 0; i < teams.length; i++) {
-      const { img, teamName, teamTag } = teams[i];
-      const slotNum = String(start + i).padStart(3, '0');
-      const fileName = slotNum + '.png';
+    for (var i = 0; i < teams.length; i++) {
+      var team = teams[i];
+      var slotNum = String(start + i).padStart(3, '0');
+      var fileName = slotNum + '.png';
 
-      // Draw PNG (real bg, no checkerboard)
-      const offscreen = document.createElement('canvas');
+      var offscreen = document.createElement('canvas');
       offscreen.width = settings.w; offscreen.height = settings.h;
-      const ctx = offscreen.getContext('2d');
-      if (settings.bg !== 'transparent') { ctx.fillStyle = settings.bg; ctx.fillRect(0, 0, settings.w, settings.h); }
-      const targetRatio = settings.w / settings.h, imgRatio = img.naturalWidth / img.naturalHeight;
-      let sx, sy, sw, sh;
-      if (imgRatio > targetRatio) { sh = img.naturalHeight; sw = sh * targetRatio; sx = (img.naturalWidth - sw) / 2; sy = 0; }
-      else { sw = img.naturalWidth; sh = sw / targetRatio; sx = 0; sy = (img.naturalHeight - sh) / 2; }
-      ctx.drawImage(img, sx, sy, sw, sh, 0, 0, settings.w, settings.h);
+      var ctx = offscreen.getContext('2d');
+      if (settings.bg !== 'transparent') {
+        ctx.fillStyle = settings.bg;
+        ctx.fillRect(0, 0, settings.w, settings.h);
+      }
+      var targetRatio = settings.w / settings.h;
+      var imgRatio = team.img.naturalWidth / team.img.naturalHeight;
+      var sx, sy, sw, sh;
+      if (imgRatio > targetRatio) {
+        sh = team.img.naturalHeight; sw = sh * targetRatio;
+        sx = (team.img.naturalWidth - sw) / 2; sy = 0;
+      } else {
+        sw = team.img.naturalWidth; sh = sw / targetRatio;
+        sx = 0; sy = (team.img.naturalHeight - sh) / 2;
+      }
+      ctx.drawImage(team.img, sx, sy, sw, sh, 0, 0, settings.w, settings.h);
 
-      const blob = await new Promise(res => offscreen.toBlob(res, 'image/png'));
+      var blob = await new Promise(function(res) { offscreen.toBlob(res, 'image/png'); });
       teamIcon.file(fileName, blob);
 
-      // CSV row
-      const name = (teamName || ('Team ' + (start + i))).replace(/,/g, ' ');
-      const tag = (teamTag || slotNum).replace(/,/g, '');
-      csv += `${start + i},${name},${tag},${fileName},FFFFFFFF
-`;
+      var name = (team.teamName || ('Team ' + (start + i))).replace(/,/g, ' ');
+      var tag = (team.teamTag || slotNum).replace(/,/g, '');
+      csv += (start + i) + ',' + name + ',' + tag + ',' + fileName + ',FFFFFFFF
+';
     }
 
     observer.file('Teaminfo.csv', csv);
-
-    const zipBlob = await zip.generateAsync({ type: 'blob' });
-    const a = document.createElement('a');
+    var zipBlob = await zip.generateAsync({ type: 'blob' });
+    var a = document.createElement('a');
     a.href = URL.createObjectURL(zipBlob);
     a.download = 'Observer_PUBG.zip';
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
   }
+})();
 </script>
 </body>
 </html>
