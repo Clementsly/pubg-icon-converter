@@ -21,7 +21,18 @@
   .sg{display:flex;flex-direction:column;gap:5px;flex:1;min-width:130px;}
   .sg label{font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);}
   .sg select,.sg input[type="number"]{background:var(--surface-2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 12px;font-size:0.875rem;font-family:var(--font);outline:none;cursor:pointer;}
-  .drop-area{width:100%;max-width:720px;border:2px dashed var(--border);border-radius:var(--radius);background:var(--surface);padding:40px 24px;text-align:center;transition:border-color 0.2s,background 0.2s;margin-bottom:20px;cursor:pointer;}
+  /* Barre session */
+  .session-bar{width:100%;max-width:720px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  .session-bar span{font-size:0.78rem;color:var(--text-muted);flex:1;min-width:120px;}
+  .session-bar span strong{color:var(--text);}
+  .btn-session{padding:7px 14px;font-size:0.8rem;font-weight:600;border-radius:7px;border:none;cursor:pointer;font-family:var(--font);display:flex;align-items:center;gap:5px;}
+  .btn-export{background:var(--surface-2);color:var(--text);border:1px solid var(--border);}
+  .btn-export:hover{border-color:var(--accent);color:var(--accent);}
+  .btn-import{background:var(--surface-2);color:var(--text);border:1px solid var(--border);}
+  .btn-import:hover{border-color:#58a6ff;color:#58a6ff;}
+  #sessionFileInput{display:none;}
+  /* Drop */
+  .drop-area{width:100%;max-width:720px;border:2px dashed var(--border);border-radius:var(--radius);background:var(--surface);padding:40px 24px;text-align:center;transition:border-color 0.2s,background 0.2s;margin-bottom:20px;}
   .drop-area.drag-over{border-color:var(--accent);background:rgba(195,245,60,0.05);}
   .drop-area .ico{font-size:2.2rem;margin-bottom:10px;}
   .drop-area h2{font-size:1.05rem;font-weight:600;margin-bottom:5px;}
@@ -29,21 +40,36 @@
   .btn-browse{display:inline-block;margin-top:14px;padding:9px 22px;background:var(--accent);color:#0d1117;font-weight:700;font-size:0.875rem;border-radius:8px;border:none;cursor:pointer;font-family:var(--font);}
   .btn-browse:hover{background:var(--accent-dark);}
   #fileInput{display:none;}
+  /* Cards */
   .teams-list{width:100%;max-width:720px;display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
   .team-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;gap:14px;padding:12px 14px;}
-  .team-preview{flex-shrink:0;width:80px;height:60px;border-radius:6px;overflow:hidden;background:#000;}
+  .team-preview{flex-shrink:0;width:80px;height:60px;border-radius:6px;overflow:hidden;background:#000;position:relative;}
   .team-preview canvas{width:100%;height:100%;display:block;}
+  .pipette-btn{position:absolute;bottom:3px;right:3px;width:20px;height:20px;background:rgba(0,0,0,0.75);border:1px solid rgba(255,255,255,0.3);border-radius:4px;cursor:crosshair;display:flex;align-items:center;justify-content:center;font-size:11px;line-height:1;transition:background 0.15s;}
+  .pipette-btn:hover{background:rgba(195,245,60,0.8);color:#0d1117;}
+  .pipette-btn.active{background:var(--accent);color:#0d1117;border-color:var(--accent);}
+  .team-preview.picking canvas{cursor:crosshair;}
+  .magnifier{position:fixed;pointer-events:none;z-index:9999;display:none;flex-direction:column;align-items:center;gap:4px;}
+  .magnifier-canvas{width:80px;height:80px;border-radius:50%;border:3px solid var(--accent);image-rendering:pixelated;box-shadow:0 4px 20px rgba(0,0,0,0.6);}
+  .magnifier-hex{background:rgba(0,0,0,0.85);color:#fff;font-size:0.7rem;font-family:'Courier New',monospace;padding:3px 8px;border-radius:4px;letter-spacing:0.05em;border:1px solid rgba(255,255,255,0.2);}
+  .magnifier-cross{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:80px;height:80px;pointer-events:none;}
+  .magnifier-cross::before,.magnifier-cross::after{content:'';position:absolute;background:rgba(255,255,255,0.9);}
+  .magnifier-cross::before{width:1px;height:100%;left:50%;top:0;}
+  .magnifier-cross::after{height:1px;width:100%;top:50%;left:0;}
   .team-fields{display:flex;gap:8px;flex:1;min-width:0;flex-wrap:wrap;align-items:flex-end;}
   .fg{display:flex;flex-direction:column;gap:3px;flex:1;min-width:100px;}
   .fg label{font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);}
   .fg input[type="text"]{background:var(--surface-2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 10px;font-size:0.85rem;font-family:var(--font);outline:none;width:100%;}
   .fg input[type="text"]:focus{border-color:var(--accent);}
-  /* Couleur par equipe */
-  .fg.color-fg{min-width:120px;flex:0 0 120px;}
+  .fg.color-fg{min-width:130px;flex:0 0 130px;}
   .color-row{display:flex;gap:5px;align-items:center;}
   .color-row input[type="color"]{width:32px;height:30px;padding:2px;border:1px solid var(--border);border-radius:5px;background:var(--surface-2);cursor:pointer;flex-shrink:0;}
   .color-row input[type="text"]{background:var(--surface-2);border:1px solid var(--border);color:var(--text);border-radius:5px;padding:5px 7px;font-size:0.8rem;font-family:'Courier New',monospace;outline:none;width:74px;letter-spacing:0.03em;}
   .color-row input[type="text"]:focus{border-color:var(--accent);}
+  /* Indicateur logo manquant apres import */
+  .team-preview.missing-img{background:repeating-linear-gradient(45deg,#1a1a1a,#1a1a1a 6px,#222 6px,#222 12px);}
+  .missing-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:var(--text-muted);text-align:center;padding:4px;line-height:1.3;}
+  .reupload-hint{position:absolute;bottom:2px;left:2px;right:2px;font-size:0.55rem;color:var(--accent);text-align:center;background:rgba(0,0,0,0.6);border-radius:3px;padding:1px 3px;}
   .team-meta{display:flex;align-items:center;gap:8px;flex-shrink:0;}
   .slot-badge{background:var(--accent);color:#0d1117;font-weight:800;font-size:0.75rem;padding:3px 8px;border-radius:5px;white-space:nowrap;}
   .remove-btn{background:rgba(255,255,255,0.06);color:var(--text-muted);border:none;border-radius:6px;width:28px;height:28px;font-size:0.85rem;cursor:pointer;}
@@ -57,6 +83,9 @@
   .btn-secondary{padding:14px 18px;background:var(--surface-2);color:var(--text);font-weight:600;font-size:0.875rem;border:1px solid var(--border);border-radius:10px;cursor:pointer;font-family:var(--font);}
   .note{width:100%;max-width:720px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-top:10px;font-size:0.8rem;color:var(--text-muted);line-height:1.6;}
   .note strong{color:var(--text);}
+  /* Toast */
+  .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:#1f2937;color:#fff;padding:10px 20px;border-radius:8px;font-size:0.85rem;opacity:0;transition:opacity 0.3s,transform 0.3s;pointer-events:none;z-index:10000;border:1px solid rgba(255,255,255,0.1);}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
 </head>
 <body>
@@ -64,16 +93,26 @@
   <h1>PUBG <span>Observer Builder</span></h1>
   <p>Upload tes logos, saisis les noms &mdash; ZIP pret a coller dans PUBG</p>
 </header>
+
 <div class="settings">
   <div class="sg"><label>Resolution</label><select id="resolution"><option value="512x384">512x384 px</option><option value="256x192">256x192 px</option><option value="1024x768">1024x768 px</option></select></div>
   <div class="sg"><label>Fond</label><select id="background"><option value="transparent">Transparent</option><option value="#000000">Noir</option><option value="#ffffff">Blanc</option></select></div>
   <div class="sg"><label>N debut</label><input type="number" id="startNum" value="1" min="1" max="999"></div>
 </div>
+
+<!-- Barre session -->
+<div class="session-bar">
+  <span id="sessionInfo"><strong>Session :</strong> aucune sauvegarde chargee</span>
+  <button class="btn-session btn-export" id="exportBtn" type="button">&#128229; Exporter session (.json)</button>
+  <label class="btn-session btn-import" for="sessionFileInput" style="cursor:pointer;">&#128228; Importer session (.json)</label>
+  <input type="file" id="sessionFileInput" accept=".json">
+</div>
+
 <div class="drop-area" id="dropArea">
   <div class="ico">&#128444;</div>
   <h2>Glisse tes logos ici</h2>
   <p>PNG, JPG, WEBP acceptes &mdash; plusieurs a la fois</p>
-  <button class="btn-browse" id="browseBtn" type="button">Parcourir les fichiers</button>
+  <label for="fileInput" class="btn-browse">Parcourir les fichiers</label>
 </div>
 <input type="file" id="fileInput" multiple accept="image/png,image/jpeg,image/webp">
 <div id="infoBar" class="info-bar"></div>
@@ -85,8 +124,19 @@
 <div class="note">
   <strong>ZIP genere :</strong> Observer/TeamIcon/001.png, 002.png... + Teaminfo.csv<br>
   <strong>Ou coller :</strong> %LOCALAPPDATA%\TslGame\Saved\<br>
-  <strong>Couleur equipe :</strong> utilisee dans TeamColor du CSV (format ARGB)
+  <strong>Session :</strong> Exporte ton travail en JSON, garde-le sur Drive/OneDrive, reimporte sur n'importe quel PC. Re-upload juste les logos apres import.<br>
+  <strong>Pipette :</strong> clique &#x1F50D; dans l'apercu pour activer, puis clique sur un pixel du logo.
 </div>
+
+<div class="magnifier" id="magnifier">
+  <div style="position:relative;">
+    <canvas class="magnifier-canvas" id="magCanvas" width="80" height="80"></canvas>
+    <div class="magnifier-cross"></div>
+  </div>
+  <div class="magnifier-hex" id="magHex">#ffffff</div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
 /*!
@@ -107,11 +157,19 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 <script>
 var teams = [];
 function g(id){return document.getElementById(id);}
-var dropArea=g('dropArea'),fileInput=g('fileInput'),browseBtn=g('browseBtn');
+var dropArea=g('dropArea'),fileInput=g('fileInput');
 var teamsList=g('teamsList'),downloadBtn=g('downloadBtn'),clearBtn=g('clearBtn'),infoBar=g('infoBar');
+var magnifier=g('magnifier'),magCanvas=g('magCanvas'),magHex=g('magHex');
+var magCtx=magCanvas.getContext('2d');
+var pickingState=null;
 
-browseBtn.addEventListener('click',function(e){e.stopPropagation();fileInput.click();});
-dropArea.addEventListener('click',function(e){if(e.target!==browseBtn)fileInput.click();});
+// --- Toast ---
+function showToast(msg,duration){
+  var t=g('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(t._timer);t._timer=setTimeout(function(){t.classList.remove('show');},duration||2500);
+}
+
+// --- Upload logos ---
 fileInput.addEventListener('change',function(){
   if(fileInput.files&&fileInput.files.length>0){processFiles(Array.from(fileInput.files));fileInput.value='';}
 });
@@ -123,22 +181,94 @@ dropArea.addEventListener('drop',function(e){
   var files=Array.from(e.dataTransfer.files).filter(function(f){return f.type.indexOf('image/')===0;});
   if(files.length)processFiles(files);
 });
-clearBtn.addEventListener('click',function(){teams=[];teamsList.innerHTML='';updateUI();});
+clearBtn.addEventListener('click',function(){teams=[];teamsList.innerHTML='';updateUI();cancelPicking();g('sessionInfo').innerHTML='<strong>Session :</strong> effacee';});
 downloadBtn.addEventListener('click',downloadAll);
 g('resolution').addEventListener('change',rerenderPreviews);
 g('background').addEventListener('change',rerenderPreviews);
 g('startNum').addEventListener('input',rerenderSlots);
+document.addEventListener('keydown',function(e){if(e.key==='Escape')cancelPicking();});
 
+// --- Export session JSON ---
+g('exportBtn').addEventListener('click',function(){
+  if(teams.length===0){showToast('Aucune equipe a exporter.');return;}
+  var session={
+    version:1,
+    savedAt:new Date().toISOString(),
+    settings:{
+      resolution:g('resolution').value,
+      background:g('background').value,
+      startNum:parseInt(g('startNum').value)||1
+    },
+    teams:teams.map(function(t){
+      return {teamName:t.teamName,teamTag:t.teamTag,teamColor:t.teamColor,fileName:t.fileName||''};
+    })
+  };
+  var blob=new Blob([JSON.stringify(session,null,2)],{type:'application/json'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='pubg-session-'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(a);a.click();setTimeout(function(){document.body.removeChild(a);},200);
+  showToast('Session exportee ! Garde ce fichier sur ton cloud.');
+});
+
+// --- Import session JSON ---
+g('sessionFileInput').addEventListener('change',function(){
+  var file=this.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      var session=JSON.parse(e.target.result);
+      if(!session.teams||!Array.isArray(session.teams))throw new Error('Format invalide');
+      // Appliquer settings
+      if(session.settings){
+        if(session.settings.resolution)g('resolution').value=session.settings.resolution;
+        if(session.settings.background)g('background').value=session.settings.background;
+        if(session.settings.startNum)g('startNum').value=session.settings.startNum;
+      }
+      // Reconstruire teams sans images (img=null)
+      teams=session.teams.map(function(t){
+        return {img:null,url:null,teamName:t.teamName||'',teamTag:t.teamTag||'',teamColor:t.teamColor||'#ffffff',fileName:t.fileName||''};
+      });
+      renderAll();
+      var d=session.savedAt?new Date(session.savedAt).toLocaleDateString('fr-FR'):'?';
+      g('sessionInfo').innerHTML='<strong>Session chargee :</strong> sauvegardee le '+d+' &mdash; re-uploade les logos pour les voir';
+      showToast(teams.length+' equipe(s) importee(s). Re-upload les logos !',4000);
+    }catch(err){showToast('Erreur : fichier JSON invalide.');}
+  };
+  reader.readAsText(file);
+  this.value='';
+});
+
+// --- Pipette ---
+function cancelPicking(){
+  if(!pickingState)return;
+  pickingState.previewEl.classList.remove('picking');
+  pickingState.btnEl.classList.remove('active');
+  pickingState=null;
+  magnifier.style.display='none';
+}
+function rgbToHex(r,gg,b){return '#'+[r,gg,b].map(function(v){return v.toString(16).padStart(2,'0');}).join('');}
+
+// --- Traitement fichiers ---
 function processFiles(files){
   var total=files.length,loaded=0;
+  // Tenter de matcher avec equipes importees sans image (par nom de fichier)
   for(var i=0;i<files.length;i++){
     (function(file){
       var url=URL.createObjectURL(file);
       var img=new Image();
       img.onload=function(){
-        var raw=file.name.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ');
-        var name=raw.charAt(0).toUpperCase()+raw.slice(1);
-        teams.push({img:img,url:url,teamName:name,teamTag:'',teamColor:'#ffffff'});
+        // Chercher une equipe importee sans img avec ce nom de fichier
+        var matched=false;
+        for(var j=0;j<teams.length;j++){
+          if(!teams[j].img&&teams[j].fileName&&teams[j].fileName===file.name){
+            teams[j].img=img;teams[j].url=url;matched=true;break;
+          }
+        }
+        if(!matched){
+          var raw=file.name.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' ');
+          var name=raw.charAt(0).toUpperCase()+raw.slice(1);
+          teams.push({img:img,url:url,teamName:name,teamTag:'',teamColor:'#ffffff',fileName:file.name});
+        }
         loaded++;if(loaded===total)renderAll();
       };
       img.onerror=function(){URL.revokeObjectURL(url);loaded++;if(loaded===total)renderAll();};
@@ -152,6 +282,7 @@ function getS(){var p=g('resolution').value.split('x');return{w:parseInt(p[0]),h
 function draw(img,cv,s){
   cv.width=s.w;cv.height=s.h;
   var ctx=cv.getContext('2d');ctx.clearRect(0,0,s.w,s.h);
+  if(!img){ctx.fillStyle='#1a1a1a';ctx.fillRect(0,0,s.w,s.h);return;}
   if(s.bg==='transparent'){
     for(var y=0;y<s.h;y+=10)for(var x=0;x<s.w;x+=10){
       ctx.fillStyle=(Math.floor(x/10)+Math.floor(y/10))%2===0?'#555':'#333';ctx.fillRect(x,y,10,10);
@@ -165,78 +296,107 @@ function draw(img,cv,s){
 
 function hexToARGB(hex){
   hex=hex.replace('#','');
-  if(hex.length===3) hex=hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
-  var r=parseInt(hex.slice(0,2),16),g2=parseInt(hex.slice(2,4),16),b=parseInt(hex.slice(4,6),16);
-  return 'FF'+[r,g2,b].map(function(v){return v.toString(16).toUpperCase().padStart(2,'0');}).join('');
+  if(hex.length===3)hex=hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+  var r=parseInt(hex.slice(0,2),16),gg=parseInt(hex.slice(2,4),16),b=parseInt(hex.slice(4,6),16);
+  return 'FF'+[r,gg,b].map(function(v){return v.toString(16).toUpperCase().padStart(2,'0');}).join('');
 }
 
 function slot(i){var n=(parseInt(g('startNum').value)||1)+i;return n<10?'00'+n:(n<100?'0'+n:''+n);}
-
 function renderAll(){teamsList.innerHTML='';for(var i=0;i<teams.length;i++)addCard(i);updateUI();}
 
 function addCard(idx){
   var t=teams[idx],s=getS();
   var card=document.createElement('div');card.className='team-card';card.setAttribute('data-index',idx);
 
-  // Preview
-  var prev=document.createElement('div');prev.className='team-preview';
-  var cv=document.createElement('canvas');draw(t.img,cv,s);prev.appendChild(cv);card.appendChild(prev);
+  var prev=document.createElement('div');prev.className='team-preview'+(t.img?'':' missing-img');
+  var cv=document.createElement('canvas');draw(t.img,cv,s);prev.appendChild(cv);
+  if(!t.img){
+    var ml=document.createElement('div');ml.className='missing-label';ml.textContent=t.fileName||'logo manquant';prev.appendChild(ml);
+    var rh=document.createElement('div');rh.className='reupload-hint';rh.textContent='re-upload';prev.appendChild(rh);
+  }
+
+  var pipBtn=document.createElement('button');
+  pipBtn.className='pipette-btn';pipBtn.type='button';pipBtn.title='Pipette';pipBtn.textContent='\uD83D\uDD0D';
 
   var fields=document.createElement('div');fields.className='team-fields';
 
-  // Nom
   var ng=document.createElement('div');ng.className='fg';ng.style.flex='2';
   var nl=document.createElement('label');nl.textContent='Nom equipe';
   var ni=document.createElement('input');ni.type='text';ni.placeholder='ex: Team Liquid';ni.value=t.teamName;
   ni.addEventListener('input',(function(i){return function(e){teams[i].teamName=e.target.value;};})(idx));
   ng.appendChild(nl);ng.appendChild(ni);fields.appendChild(ng);
 
-  // Tag
   var tg=document.createElement('div');tg.className='fg';
   var tl=document.createElement('label');tl.textContent='Tag';
   var ti=document.createElement('input');ti.type='text';ti.placeholder='ex: TL';ti.maxLength=6;ti.value=t.teamTag;
   ti.addEventListener('input',(function(i){return function(e){teams[i].teamTag=e.target.value;};})(idx));
   tg.appendChild(tl);tg.appendChild(ti);fields.appendChild(tg);
 
-  // Couleur equipe (picker + hex)
   var cg=document.createElement('div');cg.className='fg color-fg';
   var cl=document.createElement('label');cl.textContent='Couleur (#)';
   var crow=document.createElement('div');crow.className='color-row';
-
   var cpick=document.createElement('input');cpick.type='color';cpick.value=t.teamColor||'#ffffff';
   var chex=document.createElement('input');chex.type='text';chex.value=t.teamColor||'#ffffff';chex.maxLength=7;chex.placeholder='#ffffff';
-
-  cpick.addEventListener('input',(function(i,hexEl){return function(e){
-    teams[i].teamColor=e.target.value;
-    hexEl.value=e.target.value;
-  };})(idx,chex));
-
-  chex.addEventListener('input',(function(i,pickEl){return function(e){
-    var v=e.target.value.trim();
-    if(/^#[0-9a-fA-F]{6}$/.test(v)){
-      teams[i].teamColor=v;
-      pickEl.value=v;
-    }
-  };})(idx,cpick));
-
-  chex.addEventListener('blur',(function(i,pickEl){return function(e){
-    if(!/^#[0-9a-fA-F]{6}$/.test(e.target.value.trim())){
-      e.target.value=teams[i].teamColor||'#ffffff';
-    }
-  };})(idx,cpick));
-
+  cpick.addEventListener('input',(function(i,hEl){return function(e){teams[i].teamColor=e.target.value;hEl.value=e.target.value;};})(idx,chex));
+  chex.addEventListener('input',(function(i,pEl){return function(e){var v=e.target.value.trim();if(/^#[0-9a-fA-F]{6}$/.test(v)){teams[i].teamColor=v;pEl.value=v;}};})(idx,cpick));
+  chex.addEventListener('blur',(function(i){return function(e){if(!/^#[0-9a-fA-F]{6}$/.test(e.target.value.trim())){e.target.value=teams[i].teamColor||'#ffffff';}};})(idx));
   crow.appendChild(cpick);crow.appendChild(chex);
   cg.appendChild(cl);cg.appendChild(crow);fields.appendChild(cg);
+  card.appendChild(prev);card.appendChild(fields);
 
-  card.appendChild(fields);
+  // Pipette toggle
+  pipBtn.addEventListener('click',(function(i,previewEl,canvasEl,pEl,hEl,btnEl){
+    return function(e){
+      e.stopPropagation();
+      if(!teams[i].img){showToast('Re-upload le logo d'abord !');return;}
+      if(pickingState&&pickingState.idx===i){cancelPicking();return;}
+      cancelPicking();
+      pickingState={idx:i,canvasEl:canvasEl,cpick:pEl,chex:hEl,previewEl:previewEl,btnEl:btnEl};
+      previewEl.classList.add('picking');btnEl.classList.add('active');
+    };
+  })(idx,prev,cv,cpick,chex,pipBtn));
 
-  // Meta
+  cv.addEventListener('mousemove',(function(i,canvasEl){
+    return function(e){
+      if(!pickingState||pickingState.idx!==i)return;
+      var rect=canvasEl.getBoundingClientRect();
+      var scaleX=canvasEl.width/rect.width,scaleY=canvasEl.height/rect.height;
+      var px=Math.max(0,Math.min(canvasEl.width-1,Math.floor((e.clientX-rect.left)*scaleX)));
+      var py=Math.max(0,Math.min(canvasEl.height-1,Math.floor((e.clientY-rect.top)*scaleY)));
+      magCtx.clearRect(0,0,80,80);magCtx.imageSmoothingEnabled=false;
+      magCtx.drawImage(canvasEl,px-5,py-5,10,10,0,0,80,80);
+      var d=canvasEl.getContext('2d').getImageData(px,py,1,1).data;
+      var hex=rgbToHex(d[0],d[1],d[2]);
+      magHex.textContent=hex;magHex.style.background=hex;
+      magHex.style.color=(d[0]*0.299+d[1]*0.587+d[2]*0.114)>128?'#000':'#fff';
+      magnifier.style.display='flex';
+      magnifier.style.left=(e.clientX+20)+'px';magnifier.style.top=(e.clientY-50)+'px';
+    };
+  })(idx,cv));
+
+  cv.addEventListener('mouseleave',function(){magnifier.style.display='none';});
+
+  cv.addEventListener('click',(function(i,canvasEl){
+    return function(e){
+      if(!pickingState||pickingState.idx!==i)return;
+      e.stopPropagation();
+      var rect=canvasEl.getBoundingClientRect();
+      var scaleX=canvasEl.width/rect.width,scaleY=canvasEl.height/rect.height;
+      var px=Math.max(0,Math.min(canvasEl.width-1,Math.floor((e.clientX-rect.left)*scaleX)));
+      var py=Math.max(0,Math.min(canvasEl.height-1,Math.floor((e.clientY-rect.top)*scaleY)));
+      var d=canvasEl.getContext('2d').getImageData(px,py,1,1).data;
+      var hex=rgbToHex(d[0],d[1],d[2]);
+      teams[i].teamColor=hex;pickingState.cpick.value=hex;pickingState.chex.value=hex;
+      cancelPicking();showToast('Couleur capturee : '+hex);
+    };
+  })(idx,cv));
+
   var meta=document.createElement('div');meta.className='team-meta';
   var badge=document.createElement('span');badge.className='slot-badge';badge.textContent=slot(idx)+'.png';
   var rb=document.createElement('button');rb.className='remove-btn';rb.type='button';rb.textContent='X';
   rb.addEventListener('click',(function(i){return function(){teams.splice(i,1);renderAll();};})(idx));
   meta.appendChild(badge);meta.appendChild(rb);card.appendChild(meta);
-
+  prev.appendChild(pipBtn);
   teamsList.appendChild(card);
 }
 
@@ -250,12 +410,12 @@ function updateUI(){
 }
 
 function downloadAll(){
+  var hasAllImgs=teams.every(function(t){return t.img;});
+  if(!hasAllImgs){showToast('Certains logos sont manquants, re-uploade-les d'abord !',3500);return;}
   var zip=new JSZip();
-  var obs=zip.folder('Observer');
-  var ti=obs.folder('TeamIcon');
+  var obs=zip.folder('Observer');var ti=obs.folder('TeamIcon');
   var s=getS(),start=parseInt(g('startNum').value)||1;
-  var csv='Number,Name,Tags,FileName,TeamColor
-';
+  var csv='Number,Name,Tags,FileName,TeamColor\n';
   var promises=[];
   for(var i=0;i<teams.length;i++){
     (function(t,i){
@@ -272,9 +432,7 @@ function downloadAll(){
       promises.push(p);
       var name=(t.teamName||'Team '+(start+i)).replace(/,/g,' ');
       var tag=(t.teamTag||sl).replace(/,/g,'');
-      var argb=hexToARGB(t.teamColor||'#ffffff');
-      csv+=(start+i)+','+name+','+tag+','+fn+','+argb+'
-';
+      csv+=(start+i)+','+name+','+tag+','+fn+','+hexToARGB(t.teamColor||'#ffffff')+'\n';
     })(teams[i],i);
   }
   Promise.all(promises).then(function(){
