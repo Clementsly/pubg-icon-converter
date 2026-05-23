@@ -335,7 +335,7 @@ function processFiles(files) {
         }
         if (!matched) {
           var raw = file.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ');
-          teams.push({ img: img, url: url, teamName: raw.charAt(0).toUpperCase() + raw.slice(1), teamTag: '', teamColor: '#ffffff', fileName: file.name });
+          teams.push({ img: img, url: url, teamName: raw.charAt(0).toUpperCase() + raw.slice(1), teamTag: '', teamColor: '#ffffff', fileName: file.name, zoom: 0.9 });
         }
         loaded++; if (loaded === total) renderAll();
       };
@@ -347,7 +347,7 @@ function processFiles(files) {
 
 function getS(){ var p = g('resolution').value.split('x'); return { w: parseInt(p[0]), h: parseInt(p[1]), bg: g('background').value }; }
 
-function draw(img, cv, s) {
+function draw(img, cv, s, zoom) {
   cv.width = s.w; cv.height = s.h;
   var ctx = cv.getContext('2d'); ctx.clearRect(0,0,s.w,s.h);
   if (!img) { ctx.fillStyle = '#1a1a1a'; ctx.fillRect(0,0,s.w,s.h); return; }
@@ -357,8 +357,9 @@ function draw(img, cv, s) {
     }
   } else { ctx.fillStyle = s.bg; ctx.fillRect(0,0,s.w,s.h); }
   var tr=s.w/s.h, ir=img.naturalWidth/img.naturalHeight, dw, dh, dx, dy;
-  if (ir>tr){ dh=s.h; dw=dh*ir; dy=0; dx=(s.w-dw)/2; }
-  else      { dw=s.w; dh=dw/ir; dx=0; dy=(s.h-dh)/2; }
+  if (ir>tr){ dw=s.w; dh=dw/ir; dx=0; dy=(s.h-dh)/2; }
+  else      { dh=s.h; dw=dh*ir; dy=0; dx=(s.w-dw)/2; }
+  zoom = zoom||1; dw*=zoom; dh*=zoom; dx=(s.w-dw)/2; dy=(s.h-dh)/2;
   ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, dx, dy, dw, dh);
 }
 
@@ -366,7 +367,7 @@ function hexToARGB(hex){
   hex = hex.replace('#','');
   if (hex.length===3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
   var r=parseInt(hex.slice(0,2),16), gg=parseInt(hex.slice(2,4),16), b=parseInt(hex.slice(4,6),16);
-  return 'FF'+[r,gg,b].map(function(v){ return v.toString(16).toUpperCase().padStart(2,'0'); }).join('');
+  return [r,gg,b].map(function(v){ return v.toString(16).toUpperCase().padStart(2,'0'); }).join('')+'FF';
 }
 
 function slot(i){ var n=(parseInt(g('startNum').value)||1)+i; return n<10?'00'+n:(n<100?'0'+n:''+n); }
@@ -377,7 +378,7 @@ function addCard(idx) {
   var card = document.createElement('div'); card.className='team-card'; card.setAttribute('data-index', idx);
 
   var prev = document.createElement('div'); prev.className='team-preview';
-  var cv = document.createElement('canvas'); draw(t.img, cv, s); prev.appendChild(cv);
+  var cv = document.createElement('canvas'); draw(t.img, cv, s, t.zoom||1); prev.appendChild(cv);
   if (!t.img) {
     var ml = document.createElement('div'); ml.className='missing-label'; ml.textContent = t.fileName||'logo manquant'; prev.appendChild(ml);
     var rh = document.createElement('div'); rh.className='reupload-hint'; rh.textContent='re-upload'; prev.appendChild(rh);
@@ -408,6 +409,14 @@ function addCard(idx) {
   chex.addEventListener('input',(function(i,pEl){ return function(e){ var v=e.target.value.trim(); if(/^#[0-9a-fA-F]{6}$/.test(v)){teams[i].teamColor=v;pEl.value=v;} }; })(idx,cpick));
   chex.addEventListener('blur',(function(i){ return function(e){ if(!/^#[0-9a-fA-F]{6}$/.test(e.target.value.trim())) e.target.value=teams[i].teamColor||'#ffffff'; }; })(idx));
   crow.appendChild(cpick); crow.appendChild(chex); cg.appendChild(cl); cg.appendChild(crow); fields.appendChild(cg);
+
+  var zg = document.createElement('div'); zg.className='fg'; zg.style.flex='0 0 110px'; zg.style.minWidth='90px';
+  var zl = document.createElement('label'); zl.textContent='Zoom';
+  var zrow = document.createElement('div'); zrow.style.cssText='display:flex;align-items:center;gap:5px;';
+  var zslider = document.createElement('input'); zslider.type='range'; zslider.min='50'; zslider.max='150'; zslider.value=Math.round((t.zoom||1)*100); zslider.style.cssText='flex:1;accent-color:var(--accent);cursor:pointer;';
+  var zval = document.createElement('span'); zval.style.cssText='font-size:0.75rem;color:var(--text-muted);white-space:nowrap;min-width:34px;'; zval.textContent=Math.round((t.zoom||1)*100)+'%';
+  zslider.addEventListener('input',(function(i,zv,canvasEl){ return function(e){ var z=parseInt(e.target.value)/100; teams[i].zoom=z; zv.textContent=Math.round(z*100)+'%'; draw(teams[i].img,canvasEl,getS(),z); }; })(idx,zval,cv));
+  zrow.appendChild(zslider); zrow.appendChild(zval); zg.appendChild(zl); zg.appendChild(zrow); fields.appendChild(zg);
   card.appendChild(fields);
 
   pipBtn.addEventListener('click',(function(i,previewEl,canvasEl,pEl,hEl,btnEl){
@@ -459,7 +468,7 @@ function addCard(idx) {
   teamsList.appendChild(card);
 }
 
-function rerenderPreviews(){ var s=getS(); teamsList.querySelectorAll('.team-card').forEach(function(c){ draw(teams[parseInt(c.getAttribute('data-index'))].img,c.querySelector('canvas'),s); }); }
+function rerenderPreviews(){ var s=getS(); teamsList.querySelectorAll('.team-card').forEach(function(c){ var idx=parseInt(c.getAttribute('data-index')); draw(teams[idx].img,c.querySelector('canvas'),s,teams[idx].zoom||1); }); }
 function rerenderSlots(){ teamsList.querySelectorAll('.team-card').forEach(function(c,i){ c.querySelector('.slot-badge').textContent=slot(i)+'.png'; }); }
 
 function updateUI(){
@@ -472,7 +481,7 @@ function downloadAll(){
   if (teams.some(function(t){ return !t.img; })){ showToast('Re-uploade les logos manquants !', 3500); return; }
   var zip=new JSZip(), obs=zip.folder('Observer'), ti=obs.folder('TeamIcon');
   var s=getS(), start=parseInt(g('startNum').value)||1;
-  var csv='Number,Name,Tags,FileName,TeamColor\n';
+  var csv='TeamNumber,TeamName,TeamShortName,ImageFileName,TeamColor\n';
   var promises=[];
   for (var i=0;i<teams.length;i++){
     (function(t,i){
@@ -481,7 +490,8 @@ function downloadAll(){
       var ctx=oc.getContext('2d');
       if (s.bg!=='transparent'){ ctx.fillStyle=s.bg; ctx.fillRect(0,0,s.w,s.h); }
       var tr=s.w/s.h,ir=t.img.naturalWidth/t.img.naturalHeight,dw,dh,dx,dy;
-      if (ir>tr){ dh=s.h;dw=dh*ir;dy=0;dx=(s.w-dw)/2; } else { dw=s.w;dh=dw/ir;dx=0;dy=(s.h-dh)/2; }
+      if (ir>tr){ dw=s.w;dh=dw/ir;dx=0;dy=(s.h-dh)/2; } else { dh=s.h;dw=dh*ir;dy=0;dx=(s.w-dw)/2; }
+      var zoom=t.zoom||1; dw*=zoom; dh*=zoom; dx=(s.w-dw)/2; dy=(s.h-dh)/2;
       ctx.drawImage(t.img,0,0,t.img.naturalWidth,t.img.naturalHeight,dx,dy,dw,dh);
       promises.push(new Promise(function(res){ oc.toBlob(function(blob){ ti.file(fn,blob); res(); },'image/png'); }));
       csv+=n+','+(t.teamName||'Team '+n).replace(/,/g,' ')+','+(t.teamTag||sl).replace(/,/g,'')+','+fn+','+hexToARGB(t.teamColor||'#ffffff')+'\n';
